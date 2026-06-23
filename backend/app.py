@@ -65,5 +65,6 @@ def serve_assets(filename):
     return send_from_directory(os.path.join(app.static_folder, 'assets'), filename)
 
 if __name__ == '__main__':
-    print("🚀 Flask server running on http://localhost:5000")
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    print(f"🚀 Flask server running on port {port}")
+    app.run(host='0.0.0.0', port=port)

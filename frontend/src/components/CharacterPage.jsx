@@ -8,17 +8,19 @@ export default function CharacterPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`/api/character/${name}`)
-      .then(res => {
-        console.log("✅ Character data received:", res.data); // Debug
-        setCharacter(res.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("❌ Error fetching character:", err);
-        setLoading(false);
-      });
-  }, [name]);
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  
+  axios.get(`${apiUrl}/api/character/${name}`)
+    .then(res => {
+      console.log("✅ Character data received:", res.data);
+      setCharacter(res.data);
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error("❌ Error fetching character:", err);
+      setLoading(false);
+    });
+}, [name]);
 
   if (loading) {
     return <div className="text-center text-4xl mt-20 text-white">Loading character...</div>;

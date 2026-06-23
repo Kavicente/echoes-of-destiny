@@ -1,0 +1,59 @@
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
+
+/* === Custom Styles === */
+.bg-gradient {
+  background: linear-gradient(90deg, #b4f8c8 0%, #89f7fe 100%);
+  min-height: 100vh;
+}
+
+.header-gradient {
+  background: linear-gradient(90deg, #b4f8c8 0%, #89f7fe 100%);
+}
+
+.nav-link {
+  font-family: system-ui, sans-serif;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  color: black;
+  text-decoration: none;
+  padding: 8px 16px;
+  transition: all 0.2s;
+}
+
+.nav-link:hover {
+  color: #1f2937;
+  background-color: rgba(255,255,255,0.3);
+  border-radius: 4px;
+}
+
+.character-page {
+  min-height: calc(100vh - 4rem);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+.floating-char {
+  width: 300px;
+  max-width: 30%;
+  animation: float 6s ease-in-out infinite;
+  margin-right: 2rem;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-25px) translateX(15px); }
+}
+
+.character-title, .skills {
+  font-family: system-ui, sans-serif;
+  color: rgb(0, 0, 0);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}

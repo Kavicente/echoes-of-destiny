@@ -29,23 +29,26 @@ export default function CharacterPage() {
       });
   }, [name]);
 
-  // Load images from BOTH frontend/public AND backend/static
+  // Load images for ALL characters (tries multiple paths)
   useEffect(() => {
     if (!character?.name) return;
 
     const charName = character.name;
-    const images = [];
+    const images = [`/assets/pics/${character.image}`]; // Main image
 
-    // Main image - try both locations
-    images.push(`/assets/pics/${character.image}`);
-    images.push(`/assets/pics/${charName}/${character.image}`);
-
-    const patterns = [" (1)", " (1.1)", " (1.2)", " (2)", " (2.2)", " (3)", " (4)", " (4.1)", " (4.2)", " (4.3)", " (5)"];
+    const patterns = [
+      " (1)", " (1.1)", " (1.2)", " (1.3)", " (1.4)", " (1.5)", " (1.6)", " (1.7)", " (1.8)", " (1.9)", " (1.10)",
+      " (2)", " (2.1)", " (2.2)", " (2.3)", " (2.4)", " (2.5)", " (2.6)", " (2.7)", " (2.8)", " (2.9)", " (2.10)",
+      " (3)", " (3.1)", " (3.2)", " (3.3)", " (3.4)", " (3.5)", " (3.6)", " (3.7)", " (3.8)", " (3.9)", " (3.10)",
+      " (4)", " (4.1)", " (4.2)", " (4.3)", " (4.4)", " (4.5)", " (4.6)", " (4.7)", " (4.8)", " (4.9)", " (4.10)",
+      " (5)", " (5.1)", " (5.2)", " (5.3)", " (5.4)", " (5.5)", " (5.6)", " (5.7)", " (5.8)", " (5.9)", " (5.10)",
+      " (6)", " (7)", " (8)", " (9)", " (10)"
+    ];
 
     patterns.forEach(pattern => {
-      // Try subfolder structure
+      // Try subfolder (recommended)
       images.push(`/assets/pics/${charName}/${charName}${pattern}.png`);
-      // Try root pics folder
+      // Try root folder (fallback)
       images.push(`/assets/pics/${charName}${pattern}.png`);
     });
 
@@ -53,15 +56,11 @@ export default function CharacterPage() {
   }, [character]);
 
   const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: -220, behavior: 'smooth' });
   };
 
   const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: 220, behavior: 'smooth' });
   };
 
   const toggleSkill = (title) => {
@@ -71,9 +70,10 @@ export default function CharacterPage() {
     }));
   };
 
-  // Reset expanded skills when character changes
+  // Reset states when switching characters
   useEffect(() => {
     setExpandedSkills({});
+    setAllImages([]);
   }, [name]);
 
   if (loading) {
@@ -134,7 +134,7 @@ export default function CharacterPage() {
             />
           </div>
 
-          {/* Skills Section - Clickable Cards */}
+          {/* Skills Section */}
           <div className="flex-1">
             <h1 className="text-6xl font-bold text-white mb-2">{character.name}</h1>
             <h2 className="text-4xl text-cyan-300 mb-12">Skills</h2>

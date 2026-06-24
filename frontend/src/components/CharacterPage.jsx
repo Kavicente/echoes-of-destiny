@@ -2,8 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
 export default function CharacterPage() {
   const { name } = useParams();
   const [character, setCharacter] = useState(null);
@@ -14,6 +12,8 @@ export default function CharacterPage() {
   const scrollRef = useRef(null);
 
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    
     axios.get(`${apiUrl}/api/character/${name}`)
       .then(res => {
         console.log("✅ Character data received:", res.data);
@@ -29,28 +29,28 @@ export default function CharacterPage() {
       });
   }, [name]);
 
-  // Load images ONLY from Backend
+  // Load images from BOTH frontend/public AND backend/static
   useEffect(() => {
-    if (!character?.name || character.name.toLowerCase() !== name) return;
+    if (!character?.name) return;
 
     const charName = character.name;
-    const images = [`/assets/pics/${character.image}`];
+    const images = [];
 
-    const patterns = [
-      " (1)", " (1.1)", " (1.2)", " (1.3)", " (1.4)", " (1.5)", " (1.6)", " (1.7)", " (1.8)", " (1.9)", " (1.10)",
-      " (2)", " (2.1)", " (2.2)", " (2.3)", " (2.4)", " (2.5)", " (2.6)", " (2.7)", " (2.8)", " (2.9)", " (2.10)",
-      " (3)", " (3.1)", " (3.2)", " (3.3)", " (3.4)", " (3.5)", " (3.6)", " (3.7)", " (3.8)", " (3.9)", " (3.10)",
-      " (4)", " (4.1)", " (4.2)", " (4.3)", " (4.4)", " (4.5)", " (4.6)", " (4.7)", " (4.8)", " (4.9)", " (4.10)",
-      " (5)", " (5.1)", " (5.2)", " (5.3)", " (5.4)", " (5.5)", " (5.6)", " (5.7)", " (5.8)", " (5.9)", " (5.10)",
-      " (6)", " (7)", " (8)", " (9)", " (10)"
-    ];
+    // Main image - try both locations
+    images.push(`/assets/pics/${character.image}`);
+    images.push(`/assets/pics/${charName}/${character.image}`);
+
+    const patterns = [" (1)", " (1.1)", " (1.2)", " (2)", " (2.2)", " (3)", " (4)", " (4.1)", " (4.2)", " (4.3)", " (5)"];
 
     patterns.forEach(pattern => {
+      // Try subfolder structure
       images.push(`/assets/pics/${charName}/${charName}${pattern}.png`);
+      // Try root pics folder
+      images.push(`/assets/pics/${charName}${pattern}.png`);
     });
 
     setAllImages(images);
-  }, [character, name]);
+  }, [character]);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -64,10 +64,10 @@ export default function CharacterPage() {
     }
   };
 
-  const toggleSkill = (skillTitle) => {
+  const toggleSkill = (title) => {
     setExpandedSkills(prev => ({
       ...prev,
-      [skillTitle]: !prev[skillTitle]
+      [title]: !prev[title]
     }));
   };
 

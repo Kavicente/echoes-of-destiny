@@ -57,3 +57,105 @@
   color: rgb(0, 0, 0);
   text-shadow: 0 2px 10px rgba(0,0,0,0.6);
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Small horizontal images */
+.small-character-img {
+  width: 230px;   /* ← Change this */
+  height: 250px;  /* ← Change this */
+  margin-top: 20px;
+  object-fit: contain;
+}
+
+/* Main large image */
+/* Main Large Image */
+.main-character-img {
+  width: 450px;           /* Change this to adjust size */
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Container for main image - Add left & right spacing */
+.main-character-container {
+  margin-top: 220px;      /* Top spacing */
+  margin-bottom: 20px;
+  margin-left: -210px;      /* ← Added Left spacing */
+  margin-right: 40px;     /* ← Added Right spacing */
+}
+
+/* ==================== SKILL CARDS ==================== */
+.skill-card {
+  
+  backdrop-filter: blur(12px);
+  color: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+}
+
+.skill-card:hover {
+  background-color: rgba(0, 0, 0, 0.85);
+  border-color: rgba(103, 232, 249, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.skill-card .skill-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skill-card .skill-title span {
+  color: #67e8f9;
+  font-size: 1.4rem;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+}
+
+.skill-card.expanded .skill-title span {
+  transform: rotate(45deg);
+}
+
+.skill-card .skill-description {
+  color: #e5e7eb;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+/* ==================== RESPONSIVE GRID ==================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 4px;
+}
+
+/* Optional: Fine-tune on smaller screens */
+@media (max-width: 1024px) {
+  .main-character-container {
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-top: 100px;
+  }
+  
+  .main-character-img {
+    width: 380px;
+  }
+}
+

@@ -40,6 +40,10 @@ def load_bio(character_name):
     print(f"⚠️ Bio not found for: {character_name}")  # Debug log
     return "Bio not found."
 
+@app.route('/')
+def home():
+    return jsonify({"status": "ok", "message": "Story Guide Backend is running"})
+
 @app.route('/api/characters')
 def get_characters():
     return jsonify(CHARACTERS)

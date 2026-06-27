@@ -93,58 +93,78 @@
 
 /* ==================== SKILL CARDS ==================== */
 .skill-card {
-  
+  width: 150%;
+  min-height: 90px;
   backdrop-filter: blur(12px);
-  color: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255,255,255,0.18);
   border-radius: 16px;
-  padding: 24px;
+  padding: 20px 24px;
   transition: all 0.3s ease;
   cursor: pointer;
-  
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .skill-card:hover {
-  background-color: rgba(0, 0, 0, 0.85);
-  border-color: rgba(103, 232, 249, 0.4);
+  border-color: rgba(103, 232, 249, 0.5);
   transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
 }
 
-.skill-card .skill-title {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.5);
-  margin-bottom: 12px;
+.skill-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
-.skill-card .skill-title span {
+.skill-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #000000;
+  flex: 1;
+  
+}
+
+.skill-toggle {
+  font-size: 1.5rem;
   color: #67e8f9;
-  font-size: 1.4rem;
   font-weight: 300;
   transition: transform 0.3s ease;
 }
 
-.skill-card.expanded .skill-title span {
+.skill-card.expanded .skill-toggle {
   transform: rotate(45deg);
 }
 
-.skill-card .skill-description {
-  color: #e5e7eb;
-  font-size: 1.02rem;
-  line-height: 1.75;
+.skill-description {
+  color: rgba(0, 0, 0, 5);
+  font-size: 1rem;
+  line-height: 1.55;
+  max-height: 0;
   overflow: hidden;
+  opacity: 0;
   transition: all 0.4s ease;
+  margin-top: 12px;
+  text-align: justify;
+  -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.9);   /* Black stroke */
+  text-stroke: 0.8px rgba(0, 0, 0, 0.9);           /* Standard fallback */
+  paint-order: stroke fill;
+}
+
+.skill-card.expanded .skill-description {
+  max-height: 800px;
+  opacity: 1;
 }
 
 /* ==================== RESPONSIVE GRID ==================== */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 4px;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 128px;           /* Reduced gap */
+  margin-top: 30px;
 }
+
 
 /* Optional: Fine-tune on smaller screens */
 @media (max-width: 1024px) {
@@ -156,6 +176,9 @@
   
   .main-character-img {
     width: 380px;
+  }
+  .skill-card {
+    min-height: 320px;
   }
 }
 

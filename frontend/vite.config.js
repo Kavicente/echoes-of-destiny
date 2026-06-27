@@ -1,13 +1,16 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:5000',
-      '/assets': 'http://localhost:5000'
+      // ONLY proxy API calls to Next.js backend
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      }
+      // Do NOT proxy /assets — Vite should serve from public/assets folder
     }
   }
 })

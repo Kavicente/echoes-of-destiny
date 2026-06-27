@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import SkillCard from './SkillCard';
 
 export default function CharacterPage() {
   const { name } = useParams();
@@ -8,29 +9,38 @@ export default function CharacterPage() {
   const [loading, setLoading] = useState(true);
   const [skills, setSkills] = useState([]);
   const [allImages, setAllImages] = useState([]);
-  const [expandedSkills, setExpandedSkills] = useState({});
+  const [expandedCard, setExpandedCard] = useState(null); // State for expanded card index
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-    
-    axios.get(`${apiUrl}/api/character/${name}`)
-      .then(res => {
+    const fetchCharacter = async () => {
+      setLoading(true);
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const res = await axios.get(`${apiUrl}/api/character/${name}`);
         console.log("✅ Character data received:", res.data);
+        
         setCharacter(res.data);
         
-        const skillList = res.data.bio.split('\n\n').filter(s => s.trim() !== '');
-        setSkills(skillList);
-        setLoading(false);
-      })
-      .catch(err => {
+        // Use skills array from backend (preferred)
+        if (res.data.skills && Array.isArray(res.data.skills) && res.data.skills.length > 0) {
+          setSkills(res.data.skills);
+        } else if (res.data.bio) {
+          // Fallback: split old bio format
+          const skillBlocks = res.data.bio.split('\n\n').filter(s => s.trim() !== '');
+          setSkills(skillBlocks);
+        }
+      } catch (err) {
         console.error("❌ Error fetching character:", err);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    fetchCharacter();
   }, [name]);
 
-  // Load images for ALL characters (tries multiple paths)
-  useEffect(() => {
+  // Load images
+    useEffect(() => {
     if (!character?.name) return;
 
     const charName = character.name;
@@ -55,6 +65,11 @@ export default function CharacterPage() {
     setAllImages(images);
   }, [character]);
 
+  const toggleCard = (index) => {
+    setExpandedCard(expandedCard === index ? null : index);
+  };
+
+
   const scrollLeft = () => {
     if (scrollRef.current) scrollRef.current.scrollBy({ left: -220, behavior: 'smooth' });
   };
@@ -62,19 +77,6 @@ export default function CharacterPage() {
   const scrollRight = () => {
     if (scrollRef.current) scrollRef.current.scrollBy({ left: 220, behavior: 'smooth' });
   };
-
-  const toggleSkill = (title) => {
-    setExpandedSkills(prev => ({
-      ...prev,
-      [title]: !prev[title]
-    }));
-  };
-
-  // Reset states when switching characters
-  useEffect(() => {
-    setExpandedSkills({});
-    setAllImages([]);
-  }, [name]);
 
   if (loading) {
     return <div className="text-center text-4xl mt-20 text-white">Loading character...</div>;
@@ -139,32 +141,29 @@ export default function CharacterPage() {
             <h1 className="text-6xl font-bold text-white mb-2">{character.name}</h1>
             <h2 className="text-4xl text-cyan-300 mb-12">Skills</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {skills.map((skill, index) => {
-                const title = skill.split('\n')[0] || skill.substring(0, 80) + '...';
-                return (
-                  <div 
-                    key={title}
-                    className="bg-black/70 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-white/90 leading-relaxed hover:bg-black/80 transition-all cursor-pointer"
-                    onClick={() => toggleSkill(title)}
-                  >
-                    <div className="flex justify-between items-center mb-3">
-                      <p className="text-lg font-medium">{title}</p>
-                      <span className="text-cyan-300 text-2xl">
-                        {expandedSkills[title] ? '−' : '+'}
-                      </span>
-                    </div>
-                    
-                    <p className={`text-white/80 text-[17px] leading-relaxed overflow-hidden transition-all duration-300 ${expandedSkills[title] ? 'max-h-[600px]' : 'max-h-0'}`}>
-                      {skill}
-                    </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {skills.map((skill, index) => (
+                <div 
+                  key={index}
+                  className={`skill-card ${expandedCard === index ? 'expanded' : ''}`}
+                  onClick={() => toggleCard(index)}
+                >
+                  <div className="skill-card-header">
+                    <div className="skill-title">{skill.split('\n')[0] || skill}</div>
+                    <span className="skill-toggle">
+                      {expandedCard === index ? '−' : '+'}
+                    </span>
                   </div>
-                );
-              })}
+                  <div className="skill-description">
+                    {skill.split('\n').slice(1).join('\n') || skill}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
     </div>
   );
+
 }

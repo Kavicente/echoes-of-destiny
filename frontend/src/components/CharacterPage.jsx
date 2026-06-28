@@ -18,19 +18,20 @@ export default function CharacterPage() {
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
         const res = await axios.get(`${apiUrl}/api/character/${name}`);
-        console.log("✅ Character data received from backend:", res.data);
+        console.log("✅ Character data received:", res.data);
         
         setCharacter(res.data);
         
+        // Use skills array from backend (preferred)
         if (res.data.skills && Array.isArray(res.data.skills) && res.data.skills.length > 0) {
           setSkills(res.data.skills);
         } else if (res.data.bio) {
+          // Fallback: split old bio format
           const skillBlocks = res.data.bio.split('\n\n').filter(s => s.trim() !== '');
           setSkills(skillBlocks);
         }
       } catch (err) {
-        console.error("❌ Backend failed, trying fallback...", err);
-        // You can add frontend fallback logic here later if needed
+        console.error("❌ Error fetching character:", err);
       } finally {
         setLoading(false);
       }
@@ -38,12 +39,12 @@ export default function CharacterPage() {
     fetchCharacter();
   }, [name]);
 
-  // Load images with Backend + Frontend Public fallback
-  useEffect(() => {
+  // Load images
+    useEffect(() => {
     if (!character?.name) return;
 
     const charName = character.name;
-    const images = [`/assets/pics/${character.image}`];
+    const images = [`/assets/pics/${character.image}`]; // Main image
 
     const patterns = [
       " (1)", " (1.1)", " (1.2)", " (1.3)", " (1.4)", " (1.5)", " (1.6)", " (1.7)", " (1.8)", " (1.9)", " (1.10)",
@@ -55,9 +56,9 @@ export default function CharacterPage() {
     ];
 
     patterns.forEach(pattern => {
-      // Primary: Backend / public folder
+      // Try subfolder (recommended)
       images.push(`/assets/pics/${charName}/${charName}${pattern}.png`);
-      // Fallback: Root pics folder
+      // Try root folder (fallback)
       images.push(`/assets/pics/${charName}${pattern}.png`);
     });
 
